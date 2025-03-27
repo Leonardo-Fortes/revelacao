@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chá Revelação</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+   
+    <script>
+
+        function registrarEscolha(genero) {
+            let nome = prompt("Digite seu nome para registrar sua escolha:");
+            if (nome) {
+                let lista = JSON.parse(localStorage.getItem("chaRevelacao")) || [];
+                lista.push({ nome, genero });
+                localStorage.setItem("chaRevelacao", JSON.stringify(lista));
+                atualizarLista();
+            }
+        }
+
+        function atualizarLista() {
+            let lista = JSON.parse(localStorage.getItem("chaRevelacao")) || [];
+            let html = "";
+            lista.forEach(pessoa => {
+                html += `<p>${pessoa.nome} escolheu <strong>${pessoa.genero}</strong></p>`;
+            });
+            document.getElementById("listaNomes").innerHTML = html;
+        }
+
+    </script>
+</head>
+<body onload="atualizarLista()" >
+    <div>
+    <div class="image-container">
+        <img  src="imgs/fundo-maior.jpg">
+        <h1 class="overlay-text-title ">Chá Revelação</h1>
+        <h1 class="overlay-text">Tamires e Leonardo</h1>
+    </div>
+                   <div id="modal" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:#fff; padding:20px; border-radius:10px; z-index: 10;">
+                        <img id="qrCodeImg" src="" alt="QR Code" style="width:200px; height:200px;" >
+                        <div class="d-flex justify-content-center">
+                            <p>Código Pix</p>
+                        </div>
+                            <div class="d-flex">
+                        <input type="text" id="pixCode" readonly style="width:80%; padding:3px;text-align:center; font-size:12px;">
+                            <!-- Botão de copiar -->
+                            <button onclick="copiarCodigo()" style="background:#007bff; color:white; border:none; cursor:pointer;"><i class="fa-regular fa-copy"></i></button>
+                        </div>
+
+                        <div class="d-flex mt-2 justify-content-center ">
+                            <button class="btn btn-danger"onclick="fecharModal()">Fechar</button>
+                        </div>
+                    </div>
+
+    <div class="img-fundo">
+        <div>
+            <div class="d-flex justify-content-center">
+                <h5 class="sub-title"style="margin-top: 120px;">Mensagem Inicial</h5>
+            </div>
+                <div class="d-flex  justify-content-center mt-5">
+                    <div class="box-msg flex-column " style="padding: 30px;">                     
+                        <p class="msg-initial">Olá, queridos amigos e familiares!
+
+Estamos transbordando de alegria com a chegada do nosso bebê e queremos compartilhar esse momento tão especial com vocês. 💕
+
+O grande dia está chegando, e queremos que estejam ao nosso lado para descobrir juntos se será um príncipe ou uma princesa! 👶✨
+
+Preparem seus palpites, escolham seu time e venham celebrar esse momento mágico conosco! 🎉<br>
+<span class="fw-bolder" style="font-size: 14px;">
+📅 Data: 22/03/2025
+📍 Local: Rua Brasil Para Cristo, 55 
+⏰ Horário: não definido <br>
+
+Esperamos vocês para essa revelação cheia de amor e emoção!  <br>
+ 
+Com carinho, <br>
+Tamires e Leonardo
+<span></p>
+                    </div>
+                </div>
+                    <hr style="margin: 120px">
+            <div class="d-flex flex-column justify-content-center">
+                
+                    <div class="d-flex justify-content-center">
+                        <h5 class="sub-title">Escolha o seu Palpite</h5>
+                    </div>
+                <div class="d-flex justify-content-center aligm-items-center mt-5">
+                    <div class="row box justify-content-around">                         
+                            <button class="btn btn-primary col-auto mt-3"onclick="registrarEscolha('Menino')" style="width: 200px; height: 100px; font-size: 30px;">👶 <br>Menino</button>
+                           
+                        
+                            <button class="btn btn-danger col-auto mt-3"onclick="registrarEscolha('Menina')" style="width: 200px; height: 100px; font-size: 30px;">👧 <br>Menina</button>
+                    </div>
+                </div>
+            </div>
+
+        
+<hr style="margin: 120px">
+                <div class="mt-5" >
+
+                    <div class="d-flex justify-content-center">
+                        <h3 class="sub-title">Contagem Regressiva 22/03</h1>
+                    </div>
+                    <div class="d-flex justify-content-center mt-5 ">
+                        
+                        <div class="row justify-content-around" style="width: 800px">
+                            <div class="box-hora col-auto mt-2 sub-title ">
+                                        <span id="days">00</span>
+                                        <br>Dias
+                            </div>
+                            <div class="box-hora col-auto mt-2 sub-title">
+                                        <span id="hours">00</span>
+                                        <br>Horas
+                            </div>
+                            <div class="box-hora col-auto mt-2 sub-title">
+                                        <span id="minutes">00</span>
+                                        <br>Minutos
+                            </div>
+                            <div class="box-hora col-auto mt-2 sub-title">
+                                        <span id="seconds">00</span>
+                                        <br>Segundos
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                </div>
+            </div>
+         
+        </div>
+    </div>
+</div>
+   <script>
+
+ function startCountdown() {
+            const targetDate = new Date("2025-03-22T00:00:00").getTime(); // Data final
+            const timer = setInterval(function () {
+                const now = new Date().getTime();
+                const difference = targetDate - now;
+
+                if (difference <= 0) {
+                    clearInterval(timer);
+                    document.querySelector(".countdown-container").innerHTML = "<h2>Tempo esgotado!</h2>";
+                    return;
+                }
+
+                const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+                document.getElementById("days").textContent = String(days).padStart(2, "0");
+                document.getElementById("hours").textContent = String(hours).padStart(2, "0");
+                document.getElementById("minutes").textContent = String(minutes).padStart(2, "0");
+                document.getElementById("seconds").textContent = String(seconds).padStart(2, "0");
+            }, 1000);
+        }
+
+        startCountdown();
+</script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
