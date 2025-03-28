@@ -17,17 +17,27 @@ body {
 }
 
 .box {
-  width: 460px;
+  width: 360px;
   height: 130px;
   background: white;
   border-radius: 10px;
   box-shadow: 2px 2px 2px 2px black;
   opacity: 0.8;
 }
-
 @media (max-width: 767px) {
   .box {
-    height: 260px;
+    height: 150px;
+  }
+}
+
+.button-select {
+  width: 300px;
+  height: 100px;
+  font-size: 30px;
+}
+@media (max-width: 767px) {
+  .button-select {
+    height: 120px;
   }
 }
 
@@ -50,6 +60,7 @@ body {
   box-shadow: 2px 2px 2px 2px black;
   opacity: 0.8;
   margin-bottom: 300px;
+  margin-left: 10px;
 }
 
 @media (max-width: 767px) {
@@ -88,7 +99,7 @@ body {
   position: absolute;
   top: 20%;
   left: 50%;
-  font-size: 48px;
+  font-size: 68px;
   transform: translate(-50%, -50%);
   color: white;
   font-weight: bold;
@@ -98,15 +109,16 @@ body {
 
 @media (max-width: 767px) {
   .overlay-text {
-    font-size: 30px;
+    font-size: 26px;
+    top: 10%;
   }
 }
 
 .overlay-text-title {
   position: absolute;
-  top: 70%;
+  top: 33%;
   left: 50%;
-  font-size: 48px;
+  font-size: 68px;
   transform: translate(-50%, -50%);
   color: white;
   font-weight: bold;
@@ -116,7 +128,8 @@ body {
 
 @media (max-width: 767px) {
   .overlay-text-title {
-    font-size: 36px;
+    font-size: 26px;
+    top: 20%;
   }
 }
 
@@ -125,14 +138,20 @@ body {
   font-size: 48px;
 }
 
-.sub-title-topo {
-  font-family: "Dancing Script", cursive;
-  font-size: 40px;
-}
-
 @media (max-width: 767px) {
   .sub-title {
     font-size: 24px;
+  }
+}
+
+.sub-title-topo {
+  font-family: "Dancing Script", cursive;
+  font-size: 68px;
+}
+
+@media (max-width: 767px) {
+  .sub-title-topo {
+    font-size: 30px;
   }
 }
 
