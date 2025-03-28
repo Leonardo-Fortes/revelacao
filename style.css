@@ -81,18 +81,6 @@ body {
   font-family: "Dancing Script", cursive;
 }
 
-.overlay-text-title {
-  position: absolute;
-  top: 10%;
-  font-size: 68px;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: white;
-  font-weight: bold;
-  text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
-  font-family: "Dancing Script", cursive;
-}
-
 .sub-title {
   font-family: "Dancing Script", cursive;
   font-size: 48px;
