@@ -8,29 +8,25 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-   
-    <script>
-
-        function registrarEscolha(genero) {
-            let nome = prompt("Digite seu nome para registrar sua escolha:");
-            if (nome) {
-                let lista = JSON.parse(localStorage.getItem("chaRevelacao")) || [];
-                lista.push({ nome, genero });
-                localStorage.setItem("chaRevelacao", JSON.stringify(lista));
-                atualizarLista();
-            }
-        }
-
-        function atualizarLista() {
-            let lista = JSON.parse(localStorage.getItem("chaRevelacao")) || [];
-            let html = "";
-            lista.forEach(pessoa => {
-                html += `<p>${pessoa.nome} escolheu <strong>${pessoa.genero}</strong></p>`;
-            });
-            document.getElementById("listaNomes").innerHTML = html;
-        }
-
-    </script>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+      
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyByGAfLQHYHECv95f-CN5cNk8Eh0hTS0Qo",
+          authDomain: "revelacao-cb353.firebaseapp.com",
+          projectId: "revelacao-cb353",
+          storageBucket: "revelacao-cb353.firebasestorage.app",
+          messagingSenderId: "327865009566",
+          appId: "1:327865009566:web:4477abd22bdd45aa93028f"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+      </script>
 </head>
 <body onload="atualizarLista()" >
     <div>
@@ -57,10 +53,11 @@ Estamos transbordando de alegria com a chegada do nosso bebê e queremos compart
 O grande dia está chegando, e queremos que estejam ao nosso lado para descobrir juntos se será um príncipe ou uma princesa! 👶✨
 
 Preparem seus palpites, escolham seu time e venham celebrar esse momento mágico conosco! 🎉<br>
+<span style="color: red;">Trazer Fralda + Mimos !!</span><br>
 <span class="fw-bolder" style="font-size: 14px;">
-📅 Data: 22/03/2025
+📅 Data: 05/04/2025
 📍 Local: Rua Brasil Para Cristo, 55 
-⏰ Horário: não definido <br>
+⏰ Horário: 16:00 <br>
 
 Esperamos vocês para essa revelação cheia de amor e emoção!  <br>
  
@@ -145,7 +142,7 @@ Tamires e Leonardo
    <script>
 
  function startCountdown() {
-            const targetDate = new Date("2025-04-05T00:00:00").getTime(); // Data final
+            const targetDate = new Date("2025-04-05T16:00:00").getTime(); // Data final
             const timer = setInterval(function () {
                 const now = new Date().getTime();
                 const difference = targetDate - now;
@@ -170,60 +167,47 @@ Tamires e Leonardo
 
         startCountdown();
 
-        function getVotes() {
-            return {
-                menino: parseInt(localStorage.getItem("votesMenino")) || 0,
-                menina: parseInt(localStorage.getItem("votesMenina")) || 0
-            };
+        function vote(option) {
+    const voteRef = db.collection("votos").doc("contagem");
+
+    return voteRef.get().then((doc) => {
+        if (doc.exists) {
+            let data = doc.data();
+            data[option] = (data[option] || 0) + 1;
+            return voteRef.update(data);
+        } else {
+            return voteRef.set({ menino: 0, menina: 0, [option]: 1 });
         }
+    }).then(() => {
+        alert("Voto registrado!");
+        updateButtons();
+    });
+}
+function updateButtons() {
+    db.collection("votos").doc("contagem").get().then((doc) => {
+        if (doc.exists) {
+            let data = doc.data();
+            let totalVotes = (data.menino || 0) + (data.menina || 0);
+            let percentMenino = totalVotes ? ((data.menino / totalVotes) * 100).toFixed(1) : 0;
+            let percentMenina = totalVotes ? ((data.menina / totalVotes) * 100).toFixed(1) : 0;
 
-        // Função para atualizar os botões com as porcentagens
-        function updateButtons() {
-            const votes = getVotes();
-            const totalVotes = votes.menino + votes.menina;
-
-            // Calculando porcentagens
-            const percentMenino = totalVotes ? ((votes.menino / totalVotes) * 100).toFixed(1) : 0;
-            const percentMenina = totalVotes ? ((votes.menina / totalVotes) * 100).toFixed(1) : 0;
-
-            // Atualizando os botões
             document.getElementById("btnMenino").textContent = `Menino (${percentMenino}%)`;
             document.getElementById("btnMenina").textContent = `Menina (${percentMenina}%)`;
         }
+    });
+}
 
-        // Função para votar
-        function vote(option) {
-            // Verifica se o usuário já votou
-            if (localStorage.getItem("voted")) {
-                alert("Você já votou! Só é permitido um voto por pessoa.");
-                return;
-            }
+firebase.firestore().collection("test").add({
+    mensagem: "Firebase funcionando!",
+    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+}).then(() => {
+    console.log("🔥 Dados enviados com sucesso!");
+}).catch(error => {
+    console.error("❌ Erro ao enviar dados:", error);
+});
 
-            // Obtendo votos atuais
-            let votes = getVotes();
+document.addEventListener("DOMContentLoaded", updateButtons);
 
-            // Atualizando os votos
-            if (option === "menino") {
-                votes.menino += 1;
-                localStorage.setItem("votesMenino", votes.menino);
-            } else {
-                votes.menina += 1;
-                localStorage.setItem("votesMenina", votes.menina);
-            }
-
-            // Marcar que o usuário votou
-            localStorage.setItem("voted", "true");
-
-            // Atualizar interface
-            updateButtons();
-        }
-
-        // Eventos dos botões
-        document.getElementById("btnMenino").addEventListener("click", () => vote("menino"));
-        document.getElementById("btnMenina").addEventListener("click", () => vote("menina"));
-
-        // Atualizar os botões ao carregar a página
-        updateButtons();
 
         // confirmação presença
 
