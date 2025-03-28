@@ -25,6 +25,12 @@ body {
   opacity: 0.8;
 }
 
+@media (max-width: 767px) {
+  .box {
+    height: 260px;
+  }
+}
+
 .box-presents {
   padding: 10px;
   height: 290px;
@@ -46,9 +52,18 @@ body {
   margin-bottom: 300px;
 }
 
+@media (max-width: 767px) {
+  .box-hora {
+    font-size: 10px;
+    width: 100px;
+    height: 100px;
+    margin-left: 6px;
+  }
+}
 .box-msg {
   width: 1400px;
-
+  margin-left: 10px;
+  margin-right: 10px;
   background: white;
   border-radius: 30px;
   box-shadow: 2px 2px 2px 2px black;
@@ -81,13 +96,53 @@ body {
   font-family: "Dancing Script", cursive;
 }
 
+@media (max-width: 767px) {
+  .overlay-text {
+    font-size: 30px;
+  }
+}
+
+.overlay-text-title {
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  font-size: 48px;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-weight: bold;
+  text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
+  font-family: "Dancing Script", cursive;
+}
+
+@media (max-width: 767px) {
+  .overlay-text-title {
+    font-size: 36px;
+  }
+}
+
 .sub-title {
   font-family: "Dancing Script", cursive;
   font-size: 48px;
 }
 
+.sub-title-topo {
+  font-family: "Dancing Script", cursive;
+  font-size: 40px;
+}
+
+@media (max-width: 767px) {
+  .sub-title {
+    font-size: 24px;
+  }
+}
+
 .msg-initial {
   font-size: 24px;
+}
+@media (max-width: 767px) {
+  .msg-initial {
+    font-size: 16px;
+  }
 }
 
 input {
