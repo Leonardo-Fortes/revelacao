@@ -38,7 +38,7 @@ startCountdown();
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
-import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc, query, where } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -132,61 +132,64 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // confirmação presença
 
-function getConfirmedList() {
-  return JSON.parse(localStorage.getItem("confirmedList")) || [];
-}
-
-function updateConfirmedList() {
-  let list = getConfirmedList();
-  let listElement = document.getElementById("confirmedList");
-  listElement.innerHTML = "";
-
-  list.forEach((name) => {
-    let li = document.createElement("li");
-    li.textContent = name;
-    listElement.appendChild(li);
-  });
-}
-
 document.getElementById("nameInput").addEventListener("input", function () {
   document.getElementById("confirmButton").disabled = this.value.trim() === "";
 });
 
-document.getElementById("confirmButton").addEventListener("click", function () {
+// Função para confirmar presença
+async function confirmarPresenca() {
   let name = document.getElementById("nameInput").value.trim();
   if (!name) return;
 
-  let list = getConfirmedList();
+  try {
+    // Verifica se o nome já está registrado
+    const q = query(collection(db, "confirmados"), where("nome", "==", name));
+    const querySnapshot = await getDocs(q);
 
-  // Impede que a mesma pessoa confirme mais de uma vez
-  if (list.includes(name)) {
-    alert("Este nome já foi confirmado!");
+    if (!querySnapshot.empty) {
+      alert("Este nome já foi confirmado!");
+      return;
+    }
+
+    // Adiciona ao Firebase
+    await addDoc(collection(db, "confirmados"), { nome: name, timestamp: new Date() });
+
+    alert(`${name}, sua presença foi confirmada!`);
+    document.getElementById("nameInput").value = "";
+    document.getElementById("confirmButton").disabled = true;
+  } catch (error) {
+    console.error("Erro ao confirmar presença:", error);
+  }
+}
+
+document.getElementById("confirmButton").addEventListener("click", confirmarPresenca);
+
+// Função para exibir a lista de presença
+async function mostrarLista() {
+  let password = prompt("Digite a senha para ver a lista:");
+  let correctPassword = "050425"; // ALTERE ESSA SENHA!
+
+  if (password !== correctPassword) {
+    alert("Senha incorreta!");
     return;
   }
 
-  list.push(name);
-  localStorage.setItem("confirmedList", JSON.stringify(list));
+  try {
+    const querySnapshot = await getDocs(collection(db, "confirmados")); // getDocs aqui!
+    let listElement = document.getElementById("confirmedList");
+    listElement.innerHTML = "";
 
-  document.getElementById("nameInput").value = "";
-  document.getElementById("confirmButton").disabled = true;
+    querySnapshot.forEach((doc) => {
+      let li = document.createElement("li");
+      li.textContent = doc.data().nome;
+      listElement.appendChild(li);
+    });
 
-  updateConfirmedList();
-});
+    document.getElementById("listTitle").style.display = "block";
+    listElement.style.display = "block";
+  } catch (error) {
+    console.error("Erro ao buscar lista de presença:", error);
+  }
+}
 
-// Atualiza a lista quando a página carrega
-updateConfirmedList();
-
-document
-  .getElementById("showListButton")
-  .addEventListener("click", function () {
-    let password = prompt("Digite a senha para ver a lista:");
-    let correctPassword = "050425"; // ALTERE ESSA SENHA!
-
-    if (password === correctPassword) {
-      document.getElementById("listTitle").style.display = "block";
-      document.getElementById("confirmedList").style.display = "block";
-      updateConfirmedList();
-    } else {
-      alert("Senha incorreta!");
-    }
-  });
+document.getElementById("showListButton").addEventListener("click", mostrarLista);
