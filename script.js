@@ -139,24 +139,20 @@ document.getElementById("nameInput").addEventListener("input", function () {
 // Função para confirmar presença
 async function confirmarPresenca() {
   let name = document.getElementById("nameInput").value.trim();
-  if (!name) return;
+  if (!name) {
+    alert("Digite seu nome antes de confirmar presença!");
+    return;
+  }
 
   try {
-    // Verifica se o nome já está registrado
-    const q = query(collection(db, "confirmados"), where("nome", "==", name));
-    const querySnapshot = await getDocs(q);
+    // Adiciona um novo documento na coleção "confirmados"
+    await addDoc(collection(db, "confirmados"), { nome: name });
 
-    if (!querySnapshot.empty) {
-      alert("Este nome já foi confirmado!");
-      return;
-    }
-
-    // Adiciona ao Firebase
-    await addDoc(collection(db, "confirmados"), { nome: name, timestamp: new Date() });
-
-    alert(`${name}, sua presença foi confirmada!`);
+    // Limpa o campo de entrada e desabilita o botão após confirmação
     document.getElementById("nameInput").value = "";
     document.getElementById("confirmButton").disabled = true;
+
+    alert(`${name}, sua presença foi confirmada!`);
   } catch (error) {
     console.error("Erro ao confirmar presença:", error);
   }
@@ -167,7 +163,7 @@ document.getElementById("confirmButton").addEventListener("click", confirmarPres
 // Função para exibir a lista de presença
 async function mostrarLista() {
   let password = prompt("Digite a senha para ver a lista:");
-  let correctPassword = "050425"; // ALTERE ESSA SENHA!
+  let correctPassword = "050425"; // Alterar para a sua senha
 
   if (password !== correctPassword) {
     alert("Senha incorreta!");
@@ -175,13 +171,15 @@ async function mostrarLista() {
   }
 
   try {
-    const querySnapshot = await getDocs(collection(db, "confirmados")); // getDocs aqui!
+    // Obtém todos os documentos da coleção "confirmados"
+    const querySnapshot = await getDocs(collection(db, "confirmados"));
     let listElement = document.getElementById("confirmedList");
-    listElement.innerHTML = "";
+    listElement.innerHTML = ""; // Limpa a lista atual
 
+    // Itera sobre os documentos da coleção
     querySnapshot.forEach((doc) => {
       let li = document.createElement("li");
-      li.textContent = doc.data().nome;
+      li.textContent = doc.data().nome; // Exibe o nome do participante
       listElement.appendChild(li);
     });
 
@@ -191,5 +189,6 @@ async function mostrarLista() {
     console.error("Erro ao buscar lista de presença:", error);
   }
 }
+
 
 document.getElementById("showListButton").addEventListener("click", mostrarLista);
