@@ -36,10 +36,39 @@ function startCountdown() {
 
 startCountdown();
 
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyByGAfLQHYHECv95f-CN5cNk8Eh0hTS0Qo",
+  authDomain: "revelacao-cb353.firebaseapp.com",
+  projectId: "revelacao-cb353",
+  storageBucket: "revelacao-cb353.firebasestorage.app",
+  messagingSenderId: "327865009566",
+  appId: "1:327865009566:web:4477abd22bdd45aa93028f"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+
+
+
+
 function vote(option) {
+  if (localStorage.getItem("voted")) {
+    alert("Você já votou!");
+    return;
+  }
+
   const voteRef = doc(db, "votos", "contagem");
 
-  return getDoc(voteRef)
+  getDoc(voteRef)
     .then((docSnap) => {
       if (docSnap.exists()) {
         let data = docSnap.data();
@@ -50,6 +79,7 @@ function vote(option) {
       }
     })
     .then(() => {
+      localStorage.setItem("voted", "true"); // Marca que o usuário votou
       alert("Voto registrado!");
       updateButtons();
     })
@@ -57,7 +87,6 @@ function vote(option) {
       console.error("Erro ao registrar voto:", error);
     });
 }
-
 // Função para atualizar os botões com a porcentagem de votos
 function updateButtons() {
   console.log("Firestore DB:", db);
@@ -88,18 +117,6 @@ function updateButtons() {
     });
 }
 
-// Enviar dados para o Firestore (exemplo adicional)
-async function addData() {
-  try {
-    const docRef = await addDoc(collection(db, "test"), {
-      mensagem: "Firebase funcionando!",
-      timestamp: serverTimestamp(),
-    });
-    console.log("🔥 Dados enviados com sucesso!", docRef.id);
-  } catch (error) {
-    console.error("❌ Erro ao enviar dados para o Firebase", error);
-  }
-}
 
 // Registra os votos
 document
